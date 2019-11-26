@@ -1,6 +1,6 @@
 package com.ph.controller;
 
-import com.ph.dto.User;
+import com.ph.model.User;
 import com.ph.mapper.QuestionMapper;
 import com.ph.mapper.UserMapper;
 import com.ph.model.Question;
@@ -79,7 +79,7 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setId(user.getId());
+        question.setCreator(user.getAccountId());
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
         questionMapper.create(question);

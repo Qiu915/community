@@ -1,6 +1,5 @@
 package com.ph.controller;
 
-import com.ph.mapper.UserMapper;
 import com.ph.model.User;
 import com.ph.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Controller
 public class ProfileController {
 
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -30,20 +27,7 @@ public class ProfileController {
                           @RequestParam(value = "pageNo",defaultValue = "1")Integer pageNo,
                           @RequestParam(value = "pageSize",defaultValue = "5")Integer pageSize){
         //进行session登陆状态验证
-        Cookie[] cookies = request.getCookies();
-        User user=null;
-        if(cookies!=null && cookies.length!=0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findbyToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        User user =(User) request.getSession().getAttribute("user");
 
         if(user==null){
             return "redirect:/";

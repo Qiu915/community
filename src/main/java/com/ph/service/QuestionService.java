@@ -3,6 +3,8 @@ package com.ph.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ph.dto.QuestionDTO;
+import com.ph.exception.CustomiseErrorCode;
+import com.ph.exception.CustomiseException;
 import com.ph.mapper.QuestionMapperExt;
 import com.ph.model.QuestionExample;
 import com.ph.model.User;
@@ -12,7 +14,6 @@ import com.ph.model.Question;
 import com.ph.model.UserExample;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class QuestionService {
         questionExample.createCriteria().andIdEqualTo(id);
         List<Question> questions = questionMapper.selectByExample(questionExample);
        // Question question = questionMapper.selectByPrimaryKey(id);
+        if(questions.size()<1){
+            throw new CustomiseException(CustomiseErrorCode.QUESTION_NOT_FOUND);
+        }
         Question question = questions.get(0);
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdEqualTo(question.getCreator());
@@ -110,7 +114,10 @@ public class QuestionService {
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            int update = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if(update!=1){
+                throw new CustomiseException(CustomiseErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }

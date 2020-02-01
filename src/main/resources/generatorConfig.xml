@@ -9,8 +9,8 @@
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <jdbcConnection driverClass="org.h2.Driver"
-                        connectionURL="jdbc:h2:~/test"
-                        userId="sa"
+                        connectionURL="jdbc:h2:~/community"
+                        userId="root"
                         password="123">
         </jdbcConnection>
 
@@ -35,6 +35,9 @@
 
         </table>
         <table tableName="question" domainObjectName="Question" >
+
+        </table>
+        <table tableName="comment" domainObjectName="Comment" >
 
         </table>
     </context>

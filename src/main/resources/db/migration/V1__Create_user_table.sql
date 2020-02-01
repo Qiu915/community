@@ -1,9 +1,9 @@
-CREATE CACHED TABLE PUBLIC.USER(
-    ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_BD22F643_4DE3_40AC_BD4D_27F43519545C) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_BD22F643_4DE3_40AC_BD4D_27F43519545C,
-    ACCOUNT_ID VARCHAR(100),
-    NAME VARCHAR(50),
-    TOKEN CHAR(36),
-    GMT_CREATE BIGINT,
-    GMT_MODIFIED BIGINT
-)
-
+create table user
+(
+    id int auto_increment primary key not null,
+    account_id varchar(100),
+    name varchar(50),
+    token varchar(36),
+    gmt_create bigint,
+    gmt_modified bigint
+);

@@ -40,7 +40,7 @@ public class ProfileController {
             model.addAttribute("section","replies");
             model.addAttribute("sectionName","最新回复");
         }
-        Map<String, Object> map = questionService.listByUserId(user.getAccountId(), pageNo, pageSize);
+        Map<String, Object> map = questionService.listByUserId(user.getId(), pageNo, pageSize);
         model.addAttribute("map",map);
         return "profile";
     }

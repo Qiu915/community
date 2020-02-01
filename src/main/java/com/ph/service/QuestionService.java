@@ -3,6 +3,7 @@ package com.ph.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ph.dto.QuestionDTO;
+import com.ph.mapper.QuestionMapperExt;
 import com.ph.model.QuestionExample;
 import com.ph.model.User;
 import com.ph.mapper.QuestionMapper;
@@ -11,6 +12,7 @@ import com.ph.model.Question;
 import com.ph.model.UserExample;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,18 +28,21 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public Map<String,Object> list(Integer pageNo, Integer pageSize) {
+    @Autowired
+    private QuestionMapperExt questionMapperExt;
+
+    public Map<String,Object> listAll(Integer pageNo, Integer pageSize) {
         Map<String,Object> map = new HashMap();
 
         ArrayList<QuestionDTO> questionDTOS = new ArrayList<>();
 
         PageHelper.startPage(pageNo,pageSize);
         //后面一个全查询
-        List<Question> questions = questionMapper.list();
+        List<Question> questions = questionMapperExt.list();
         PageInfo page = new PageInfo(questions,5);
         for (Question question : questions) {
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andAccountIdEqualTo(question.getCreator());
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
             List<User> users = userMapper.selectByExample(userExample);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);
@@ -49,7 +54,7 @@ public class QuestionService {
         return map;
     }
 
-    public Map<String, Object> listByUserId(Integer id, Integer pageNo, Integer pageSize) {
+    public Map<String, Object> listByUserId(Long id, Integer pageNo, Integer pageSize) {
         Map<String,Object> map = new HashMap();
         ArrayList<QuestionDTO> questionDTOS = new ArrayList<>();
         QuestionExample questionExample = new QuestionExample();
@@ -62,7 +67,7 @@ public class QuestionService {
         PageInfo page = new PageInfo(questions,5);
         for (Question question : questions) {
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andAccountIdEqualTo(question.getCreator());
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
             List<User> users = userMapper.selectByExample(userExample);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);
@@ -74,11 +79,15 @@ public class QuestionService {
         return map;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         QuestionDTO questionDTO = new QuestionDTO();
-        Question question = questionMapper.selectByPrimaryKey(id);
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andIdEqualTo(id);
+        List<Question> questions = questionMapper.selectByExample(questionExample);
+       // Question question = questionMapper.selectByPrimaryKey(id);
+        Question question = questions.get(0);
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andAccountIdEqualTo(question.getCreator());
+        userExample.createCriteria().andIdEqualTo(question.getCreator());
         List<User> users = userMapper.selectByExample(userExample);
         BeanUtils.copyProperties(question,questionDTO);
         questionDTO.setUser(users.get(0));

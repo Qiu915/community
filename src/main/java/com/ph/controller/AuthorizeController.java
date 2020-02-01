@@ -49,7 +49,7 @@ public class AuthorizeController {
        if(null != githubUser && githubUser.getId()!=null){
            UserExample example = new UserExample();
            example.createCriteria()
-                   .andAccountIdEqualTo(Math.toIntExact(githubUser.getId()));
+                   .andAccountIdEqualTo(String.valueOf(githubUser.getId()));
            List<User> users = userMapper.selectByExample(example);
            if( users.size()!=0){
                String token = users.get(0).getToken();
@@ -61,7 +61,7 @@ public class AuthorizeController {
                User newUser = new User();
                String token = UUID.randomUUID().toString();
                newUser.setToken(token);
-               newUser.setAccountId(Math.toIntExact(githubUser.getId()));
+               newUser.setAccountId(String.valueOf(githubUser.getId()));
                newUser.setName(githubUser.getName());
                newUser.setGmtCreate(System.currentTimeMillis());
                newUser.setGmtModified(newUser.getGmtCreate());

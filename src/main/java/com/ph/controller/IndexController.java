@@ -22,7 +22,7 @@ public class IndexController {
                         @RequestParam(value = "pageNo",defaultValue = "1")Integer pageNo,
                         @RequestParam(value = "pageSize",defaultValue = "5")Integer pageSize){
 
-        Map<String, Object> map = questionService.list(pageNo, pageSize);
+        Map<String, Object> map = questionService.listAll(pageNo, pageSize);
 
         model.addAttribute("map",map);
         return "index";
